@@ -564,6 +564,12 @@
   <data name="LvUserAgent" xml:space="preserve">
     <value>User Agent</value>
   </data>
+  <data name="LvHwid" xml:space="preserve">
+    <value>HWID (x-hwid)</value>
+  </data>
+  <data name="LvHwidTip" xml:space="preserve">
+    <value>Hardware ID sent as the x-hwid header (for panels with HWID device limit, e.g. Remnawave). Leave empty to disable.</value>
+  </data>
   <data name="TbCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

@@ -653,7 +653,25 @@ namespace ServiceLib.Resx {
                 return ResourceManager.GetString("LvUserAgent", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   查找类似 HWID (x-hwid) 的本地化字符串。
+        /// </summary>
+        public static string LvHwid {
+            get {
+                return ResourceManager.GetString("LvHwid", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   查找类似 Hardware ID sent as the x-hwid header (for panels with HWID device limit, e.g. Remnawave). Leave empty to disable. 的本地化字符串。
+        /// </summary>
+        public static string LvHwidTip {
+            get {
+                return ResourceManager.GetString("LvHwidTip", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   查找类似 WebDAV Check 的本地化字符串。
         /// </summary>

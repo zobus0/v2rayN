@@ -18,6 +18,13 @@ public class SubEditViewModel : MyReactiveObject
         });
 
         SelectedSource = subItem.Id.IsNullOrEmpty() ? subItem : JsonUtils.DeepCopy(subItem);
+
+        // Auto-fill a stable HWID so panels with an HWID device limit (e.g. Remnawave) count
+        // this client as a single device. The value is persisted with the subscription.
+        if (SelectedSource.Hwid.IsNullOrEmpty())
+        {
+            SelectedSource.Hwid = Utils.GetGuid();
+        }
     }
 
     private async Task SaveSubAsync()

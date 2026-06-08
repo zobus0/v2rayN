@@ -16,6 +16,13 @@ public class SubItem
 
     public string UserAgent { get; set; } = string.Empty;
 
+    /// <summary>
+    /// Hardware identifier sent as the x-hwid header when fetching the subscription.
+    /// Required by panels (e.g. Remnawave) that enforce an HWID device limit.
+    /// When empty, no HWID headers are sent.
+    /// </summary>
+    public string? Hwid { get; set; }
+
     public int Sort { get; set; }
 
     public string? Filter { get; set; }

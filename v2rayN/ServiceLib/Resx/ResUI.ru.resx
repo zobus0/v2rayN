@@ -564,6 +564,12 @@
   <data name="LvUserAgent" xml:space="preserve">
     <value>User-Agent (необязательно)</value>
   </data>
+  <data name="LvHwid" xml:space="preserve">
+    <value>HWID (x-hwid)</value>
+  </data>
+  <data name="LvHwidTip" xml:space="preserve">
+    <value>Идентификатор устройства, отправляется в заголовке x-hwid (для панелей с лимитом устройств по HWID, напр. Remnawave). Пусто — отключено.</value>
+  </data>
   <data name="TbCancel" xml:space="preserve">
     <value>Отмена</value>
   </data>

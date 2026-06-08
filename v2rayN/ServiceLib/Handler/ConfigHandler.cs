@@ -1797,6 +1797,57 @@ public static class ConfigHandler
     }
 
     /// <summary>
+    /// Adds servers from a JSON array of full Xray configs (one config per server),
+    /// e.g. the Remnawave <c>/json</c> subscription. Each proxy outbound is converted into a
+    /// typed profile so address/port/transport/TLS are populated and protocols like Hysteria2
+    /// run on the correct core.
+    /// </summary>
+    private static async Task<int> AddBatchServers4RemnaJson(Config config, string strData, string subid, bool isSub)
+    {
+        if (strData.IsNullOrEmpty())
+        {
+            return -1;
+        }
+
+        var subItem = await AppManager.Instance.GetSubItem(subid);
+        var lstServer = V2rayFmt.ResolveFullArrayTyped(strData, subItem?.Remarks);
+        if (lstServer is not { Count: > 0 })
+        {
+            return -1;
+        }
+
+        var counter = 0;
+        List<ProfileItem> lstAdd = [];
+        foreach (var profileItem in lstServer)
+        {
+            profileItem.Subid = subid;
+            profileItem.IsSub = isSub;
+            profileItem.PreSocksPort = subItem?.PreSocksPort;
+
+            var addStatus = profileItem.ConfigType switch
+            {
+                EConfigType.VMess => await AddVMessServer(config, profileItem, false),
+                EConfigType.Shadowsocks => await AddShadowsocksServer(config, profileItem, false),
+                EConfigType.Trojan => await AddTrojanServer(config, profileItem, false),
+                EConfigType.VLESS => await AddVlessServer(config, profileItem, false),
+                EConfigType.Hysteria2 => await AddHysteria2Server(config, profileItem, false),
+                _ => -1,
+            };
+            if (addStatus == 0)
+            {
+                counter++;
+                lstAdd.Add(profileItem);
+            }
+        }
+        if (lstAdd.Count > 0)
+        {
+            await SQLiteHelper.Instance.InsertAllAsync(lstAdd);
+        }
+        await SaveConfig(config);
+        return counter;
+    }
+
+    /// <summary>
     /// Main entry point for adding batch servers from various formats
     /// Tries different parsing methods to import as many servers as possible
     /// </summary>
@@ -1869,6 +1920,12 @@ public static class ConfigHandler
             {
                 counter = innerUriCount;
             }
+        }
+
+        //maybe a JSON array of full Xray configs (e.g. Remnawave /json) -> typed profiles
+        if (counter < 1)
+        {
+            counter = await AddBatchServers4RemnaJson(config, strData, subid, isSub);
         }
 
         //maybe other sub
@@ -1970,6 +2027,7 @@ public static class ConfigHandler
             item.Enabled = subItem.Enabled;
             item.AutoUpdateInterval = subItem.AutoUpdateInterval;
             item.UserAgent = subItem.UserAgent;
+            item.Hwid = subItem.Hwid;
             item.Sort = subItem.Sort;
             item.Filter = subItem.Filter;
             item.UpdateTime = subItem.UpdateTime;

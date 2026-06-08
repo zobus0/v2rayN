@@ -768,6 +768,26 @@ public class Utils
     /// GUID
     /// </summary>
     /// <returns></returns>
+    /// <summary>
+    /// Returns the current operating system name used for the x-device-os subscription header.
+    /// </summary>
+    public static string GetHwidDeviceOs()
+    {
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            return "Windows";
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+        {
+            return "macOS";
+        }
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            return "Linux";
+        }
+        return RuntimeInformation.OSDescription;
+    }
+
     public static string GetGuid(bool full = true)
     {
         try
